@@ -9,6 +9,30 @@ public class ArticleService(AppDbContext db)
     public Task<List<Article>> ListAsync() =>
         db.Articles.AsNoTracking().OrderByDescending(a => a.CreatedAt).ToListAsync();
 
+    public Task<List<Article>> SearchAsync(string? q, ArticleStatus? status, string? topic)
+    {
+        var query = db.Articles.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            var escaped = q.Trim().Replace("\\", "\\\\").Replace("%", "\\%").Replace("_", "\\_");
+            var pattern = $"%{escaped}%";
+            query = query.Where(a =>
+                EF.Functions.ILike(a.Title, pattern, "\\") ||
+                EF.Functions.ILike(a.Topic, pattern, "\\") ||
+                (a.Source != null && EF.Functions.ILike(a.Source, pattern, "\\")) ||
+                EF.Functions.ILike(a.Takeaway, pattern, "\\"));
+        }
+
+        if (status is not null) query = query.Where(a => a.Status == status);
+        if (!string.IsNullOrWhiteSpace(topic)) query = query.Where(a => a.Topic == topic);
+
+        return query.OrderByDescending(a => a.CreatedAt).ToListAsync();
+    }
+
+    public Task<List<string>> TopicsAsync() =>
+        db.Articles.AsNoTracking().Select(a => a.Topic).Distinct().OrderBy(t => t).ToListAsync();
+
     public Task<Article?> GetAsync(Guid id) =>
         db.Articles.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
 

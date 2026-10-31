@@ -9,9 +9,39 @@
     <a class="btn btn-primary" asp-page="Create">Add article</a>
 </div>
 
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-5">
+        <input name="Q" value="@Model.Q" class="form-control" placeholder="Search title, topic, source, takeaway" />
+    </div>
+    <div class="col-md-3">
+        <select name="Status" class="form-select">
+            <option value="">All statuses</option>
+            <option value="1" selected="@(Model.Status == MyResearchDesk.Web.Models.ArticleStatus.ToRead)">To Read</option>
+            <option value="2" selected="@(Model.Status == MyResearchDesk.Web.Models.ArticleStatus.Read)">Read</option>
+            <option value="3" selected="@(Model.Status == MyResearchDesk.Web.Models.ArticleStatus.WorthActingOn)">Worth Acting On</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="Topic" class="form-select">
+            <option value="">All topics</option>
+            @foreach (var t in Model.Topics)
+            {
+                <option value="@t" selected="@(t == Model.Topic)">@t</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2 text-nowrap">
+        <button type="submit" class="btn btn-secondary">Filter</button>
+        @if (Model.IsFiltered)
+        {
+            <a class="btn btn-outline-secondary" asp-page="Index">Clear</a>
+        }
+    </div>
+</form>
+
 @if (Model.Articles.Count == 0)
 {
-    <p class="text-muted">No articles yet. Add your first one.</p>
+    <p class="text-muted">@(Model.IsFiltered ? "No articles match your search." : "No articles yet. Add your first one.")</p>
 }
 else
 {
