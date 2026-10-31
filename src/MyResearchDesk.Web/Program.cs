@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using MyResearchDesk.Web.Api;
 using MyResearchDesk.Web.Data;
@@ -5,6 +6,10 @@ using MyResearchDesk.Web.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+if (builder.Configuration["DataProtection:KeysPath"] is { Length: > 0 } keysPath)
+{
+    builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+}
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 

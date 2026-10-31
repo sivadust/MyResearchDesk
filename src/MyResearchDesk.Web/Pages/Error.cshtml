@@ -5,9 +5,9 @@
     var notFound = Model.Code == 404;
 }
 
-<h1 class="h3">@(notFound ? "Page not found" : "Something went wrong")</h1>
+<h1 class="h3">@(notFound ? "Page not found" : Model.Code == 400 ? "Form expired" : "Something went wrong")</h1>
 <p class="text-muted">
-    @(notFound ? "That page or article doesn't exist (it may have been deleted)." : "An unexpected error occurred. Please try again.")
+    @(notFound ? "That page or article doesn't exist (it may have been deleted)." : Model.Code == 400 ? "Your session expired before the form was submitted. Go back, reload the page and try again." : "An unexpected error occurred. Please try again.")
 </p>
 <a class="btn btn-primary" asp-page="/Index">Back to dashboard</a>
 
