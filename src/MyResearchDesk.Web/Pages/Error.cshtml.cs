@@ -10,6 +10,9 @@ public class ErrorModel : PageModel
 {
     public string? RequestId { get; set; }
 
+    [BindProperty(SupportsGet = true)]
+    public int? Code { get; set; }
+
     public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
     private readonly ILogger<ErrorModel> _logger;

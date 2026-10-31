@@ -32,6 +32,9 @@ if (!app.Configuration.GetValue<bool>("DisableHttpsRedirection"))
     app.UseHttpsRedirection();
 }
 
+app.UseWhen(ctx => !ctx.Request.Path.StartsWithSegments("/api"),
+    branch => branch.UseStatusCodePagesWithReExecute("/Error/{0}"));
+
 app.UseRouting();
 
 app.UseSwagger();
@@ -46,3 +49,5 @@ app.MapRazorPages()
    .WithStaticAssets();
 
 app.Run();
+
+public partial class Program;
