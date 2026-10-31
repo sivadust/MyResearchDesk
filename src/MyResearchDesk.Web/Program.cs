@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MyResearchDesk.Web.Api;
 using MyResearchDesk.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddScoped<MyResearchDesk.Web.Services.ArticleService>();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(o => o.SwaggerDoc("v1", new() { Title = "My Research Desk API", Version = "v1" }));
+builder.Services.ConfigureHttpJsonOptions(o =>
+    o.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 
 var app = builder.Build();
 
@@ -28,6 +33,11 @@ if (!app.Configuration.GetValue<bool>("DisableHttpsRedirection"))
 }
 
 app.UseRouting();
+
+app.UseSwagger();
+app.UseSwaggerUI(o => o.SwaggerEndpoint("/swagger/v1/swagger.json", "My Research Desk API v1"));
+
+app.MapArticleApi();
 
 app.UseAuthorization();
 
