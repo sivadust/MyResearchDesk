@@ -1,19 +1,18 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MyResearchDesk.Web.Models;
+using MyResearchDesk.Web.Services;
 
 namespace MyResearchDesk.Web.Pages;
 
-public class IndexModel : PageModel
+public class IndexModel(ArticleService service) : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
+    public DashboardSummary Summary { get; private set; } = new(0, 0, 0, 0);
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public List<Article> Recent { get; private set; } = [];
+
+    public async Task OnGetAsync()
     {
-        _logger = logger;
-    }
-
-    public void OnGet()
-    {
-
+        Summary = await service.GetSummaryAsync();
+        Recent = await service.RecentAsync(5);
     }
 }

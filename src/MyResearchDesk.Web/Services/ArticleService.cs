@@ -4,6 +4,8 @@ using MyResearchDesk.Web.Models;
 
 namespace MyResearchDesk.Web.Services;
 
+public record DashboardSummary(int Total, int ToRead, int Read, int WorthActingOn);
+
 public class ArticleService(AppDbContext db)
 {
     public Task<List<Article>> ListAsync() =>
@@ -32,6 +34,20 @@ public class ArticleService(AppDbContext db)
 
     public Task<List<string>> TopicsAsync() =>
         db.Articles.AsNoTracking().Select(a => a.Topic).Distinct().OrderBy(t => t).ToListAsync();
+
+    public async Task<DashboardSummary> GetSummaryAsync()
+    {
+        var counts = await db.Articles.AsNoTracking()
+            .GroupBy(a => a.Status)
+            .Select(g => new { Status = g.Key, Count = g.Count() })
+            .ToListAsync();
+        int Of(ArticleStatus s) => counts.FirstOrDefault(c => c.Status == s)?.Count ?? 0;
+        return new DashboardSummary(counts.Sum(c => c.Count), Of(ArticleStatus.ToRead),
+            Of(ArticleStatus.Read), Of(ArticleStatus.WorthActingOn));
+    }
+
+    public Task<List<Article>> RecentAsync(int count) =>
+        db.Articles.AsNoTracking().OrderByDescending(a => a.CreatedAt).Take(count).ToListAsync();
 
     public Task<Article?> GetAsync(Guid id) =>
         db.Articles.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);

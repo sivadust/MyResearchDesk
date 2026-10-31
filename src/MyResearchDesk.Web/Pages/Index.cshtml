@@ -1,10 +1,56 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Dashboard";
+    var cards = new[]
+    {
+        (Label: "Total Articles", Value: Model.Summary.Total, Query: ""),
+        (Label: "To Read", Value: Model.Summary.ToRead, Query: "?Status=1"),
+        (Label: "Read", Value: Model.Summary.Read, Query: "?Status=2"),
+        (Label: "Worth Acting On", Value: Model.Summary.WorthActingOn, Query: "?Status=3")
+    };
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Dashboard</h1>
+    <a class="btn btn-primary" asp-page="/Articles/Create">Add article</a>
 </div>
+
+<div class="row g-3 mb-4">
+    @foreach (var c in cards)
+    {
+        <div class="col-md-3">
+            <a class="text-decoration-none text-reset" href="/Articles@(c.Query)">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="display-5">@c.Value</div>
+                        <div class="text-muted">@c.Label</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+
+<h2 class="h5">Recent articles</h2>
+@if (Model.Recent.Count == 0)
+{
+    <p class="text-muted">No articles yet. <a asp-page="/Articles/Create">Add your first one.</a></p>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Title</th><th>Topic</th><th>Status</th><th>Date Added</th></tr></thead>
+        <tbody>
+        @foreach (var a in Model.Recent)
+        {
+            <tr>
+                <td><a asp-page="/Articles/Details" asp-route-id="@a.Id">@a.Title</a></td>
+                <td>@a.Topic</td>
+                <td><partial name="_StatusBadge" model="a.Status" /></td>
+                <td>@a.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
