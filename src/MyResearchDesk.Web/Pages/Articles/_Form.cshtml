@@ -1,0 +1,45 @@
+@model MyResearchDesk.Web.Models.ArticleInput
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="mb-3">
+    <label asp-for="Title" class="form-label"></label>
+    <input asp-for="Title" class="form-control" />
+    <span asp-validation-for="Title" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Url" class="form-label">URL</label>
+    <input asp-for="Url" class="form-control" placeholder="https://" />
+    <span asp-validation-for="Url" class="text-danger"></span>
+</div>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <label asp-for="Topic" class="form-label"></label>
+        <input asp-for="Topic" class="form-control" list="topic-suggestions" />
+        <datalist id="topic-suggestions">
+            @foreach (var t in new[] { "AI", "Azure", "Architecture", "Security", "Digital Transformation", "Cloud", "Data" })
+            {
+                <option value="@t"></option>
+            }
+        </datalist>
+        <span asp-validation-for="Topic" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label asp-for="Source" class="form-label"></label>
+        <input asp-for="Source" class="form-control" />
+        <span asp-validation-for="Source" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select">
+            <option value="1">To Read</option>
+            <option value="2">Read</option>
+            <option value="3">Worth Acting On</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+</div>
+<div class="mb-3">
+    <label asp-for="Takeaway" class="form-label"></label>
+    <textarea asp-for="Takeaway" class="form-control" rows="6"></textarea>
+    <span asp-validation-for="Takeaway" class="text-danger"></span>
+</div>

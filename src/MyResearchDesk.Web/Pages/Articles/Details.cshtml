@@ -1,0 +1,21 @@
+@page "{id:guid}"
+@model MyResearchDesk.Web.Pages.Articles.DetailsModel
+@{
+    ViewData["Title"] = Model.Article.Title;
+    var a = Model.Article;
+}
+
+<h1 class="h3">@a.Title</h1>
+<p>
+    <partial name="_StatusBadge" model="a.Status" />
+    <span class="ms-2 text-muted">@a.Topic@(a.Source is null ? "" : " · " + a.Source)</span>
+</p>
+<p><a href="@a.Url" target="_blank" rel="noopener noreferrer">@a.Url</a></p>
+<h2 class="h5">Takeaway</h2>
+<p style="white-space: pre-wrap">@a.Takeaway</p>
+<p class="text-muted small">
+    Added @a.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm") · Updated @a.UpdatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+</p>
+<a class="btn btn-primary" asp-page="Edit" asp-route-id="@a.Id">Edit</a>
+<a class="btn btn-outline-danger" asp-page="Delete" asp-route-id="@a.Id">Delete</a>
+<a class="btn btn-outline-secondary" asp-page="Index">Back</a>

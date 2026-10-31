@@ -1,0 +1,16 @@
+@page "{id:guid}"
+@model MyResearchDesk.Web.Pages.Articles.EditModel
+@{
+    ViewData["Title"] = "Edit article";
+}
+
+<h1 class="h3 mb-3">Edit article</h1>
+<form method="post">
+    <partial name="_Form" for="Input" />
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-outline-secondary" asp-page="Index">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,16 @@
+@model MyResearchDesk.Web.Models.ArticleStatus
+@{
+    var css = Model switch
+    {
+        MyResearchDesk.Web.Models.ArticleStatus.ToRead => "bg-secondary",
+        MyResearchDesk.Web.Models.ArticleStatus.Read => "bg-primary",
+        _ => "bg-success"
+    };
+    var text = Model switch
+    {
+        MyResearchDesk.Web.Models.ArticleStatus.ToRead => "To Read",
+        MyResearchDesk.Web.Models.ArticleStatus.Read => "Read",
+        _ => "Worth Acting On"
+    };
+}
+<span class="badge @css">@text</span>

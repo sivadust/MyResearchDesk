@@ -7,6 +7,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
+builder.Services.AddScoped<MyResearchDesk.Web.Services.ArticleService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

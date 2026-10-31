@@ -1,0 +1,40 @@
+@page
+@model MyResearchDesk.Web.Pages.Articles.IndexModel
+@{
+    ViewData["Title"] = "Articles";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Articles</h1>
+    <a class="btn btn-primary" asp-page="Create">Add article</a>
+</div>
+
+@if (Model.Articles.Count == 0)
+{
+    <p class="text-muted">No articles yet. Add your first one.</p>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr><th>Title</th><th>Topic</th><th>Source</th><th>Status</th><th>Date Added</th><th></th></tr>
+        </thead>
+        <tbody>
+        @foreach (var a in Model.Articles)
+        {
+            <tr>
+                <td><a asp-page="Details" asp-route-id="@a.Id">@a.Title</a></td>
+                <td>@a.Topic</td>
+                <td>@a.Source</td>
+                <td><partial name="_StatusBadge" model="a.Status" /></td>
+                <td>@a.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                <td class="text-end text-nowrap">
+                    <a class="btn btn-sm btn-outline-secondary" asp-page="Details" asp-route-id="@a.Id">View</a>
+                    <a class="btn btn-sm btn-outline-primary" asp-page="Edit" asp-route-id="@a.Id">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" asp-page="Delete" asp-route-id="@a.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
